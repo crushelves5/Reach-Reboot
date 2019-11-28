@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class EventDatabaseHelper extends SQLiteOpenHelper {
     static String DATABASE_NAME = "CP317.db";
-    static int version = 8;
+    static int version = 9;
     final static String USER_ID = "USER_ID";
     final static String USER_TABLE_NAME = "USERS";
     final static String USER_NAME = "USER_NAME";
@@ -49,31 +49,31 @@ public class EventDatabaseHelper extends SQLiteOpenHelper {
         //Insert Users
         contentValues.put(USER_NAME, "user1");
         contentValues.put(PASSWORD,"1234");
-        contentValues.put("FIRST_NAME","Alpha");
-        contentValues.put("LAST_NAME","Beta");
+        contentValues.put("FIRST_NAME","Michael");
+        contentValues.put("LAST_NAME","Scott");
         contentValues.put("GENDER","Male");
 
         db.insert(USER_TABLE_NAME, "NullPlaceHolder", contentValues);
         contentValues.put(USER_NAME, "user2");
         contentValues.put(PASSWORD, "5678");
-        contentValues.put("FIRST_NAME","Turner");
-        contentValues.put("LAST_NAME","Tables");
+        contentValues.put("FIRST_NAME","Jimmy");
+        contentValues.put("LAST_NAME","Halpert");
         contentValues.put("GENDER","Female");
 
         db.insert(USER_TABLE_NAME,"NullPlaceHolder",contentValues);
         //Insert Events
         contentValues.clear();
         contentValues.put(USER_ID,1);
-        contentValues.put(event_name,"Project Demo");
+        contentValues.put(event_name,"Scott's Totts");
         contentValues.put(location,"75 University Ave W, Waterloo");
-        contentValues.put(start_date,"2019-11-13");
-        contentValues.put(desc,"Come and throw Down at our Project Demo");
+        contentValues.put(start_date,"2019-12-4");
+        contentValues.put(desc,"A celebration of Michael Scott's dedication to pay college tuition for a class of highschoolers");
         db.insert(EVENT_TABLE_NAME, "NullPlaceHolder",contentValues);
         contentValues.put(USER_ID,2);
-        contentValues.put(event_name,"Project Demo 2");
+        contentValues.put(event_name,"The Beasely sale");
         contentValues.put(location,"75 University Ave W, Waterloo");
-        contentValues.put(start_date,"2019-11-14");
-        contentValues.put(desc,"Come and throw Down at our Project Demo 2");
+        contentValues.put(start_date,"2019-12-5");
+        contentValues.put(desc,"Pam Beasely will be baking her famous cookies, come and buy");
         db.insert(EVENT_TABLE_NAME, "NullPlaceHolder",contentValues);
         //Insert event to attending
         contentValues.clear();

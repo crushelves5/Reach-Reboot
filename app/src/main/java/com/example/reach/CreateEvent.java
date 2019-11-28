@@ -12,7 +12,10 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 public class CreateEvent extends AppCompatActivity {
     String userid;
@@ -65,4 +68,37 @@ public class CreateEvent extends AppCompatActivity {
             }
         });
     }
+
+    boolean dateValidator(String date){
+        Date c = Calendar.getInstance().getTime();
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        Date inputDate;
+        //Set current date to midnight for better comparison
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(c);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        c = calendar.getTime();
+        try {
+            inputDate = format.parse(date);
+            if(c.compareTo(inputDate) <= 0) {
+                return true;
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    boolean validateEvent(String name, String location, String date){
+
+        if(!name.trim().equals("") && (!date.equals("") && dateValidator(date)) && !location.trim().equals("") ){
+            return true;
+        }
+    return false;
+    }
+
 }

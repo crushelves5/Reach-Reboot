@@ -12,6 +12,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 
+import org.apache.commons.lang3.StringUtils;
+
 public class CreateAccount extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
     String [] Gender = {"Male","Female","Other"};
@@ -64,5 +66,16 @@ public class CreateAccount extends AppCompatActivity implements AdapterView.OnIt
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return true;
+    }
+    boolean validateAccountInput(String username, String password, String firstName, String lastName, String gender){
+        CharSequence cs = username;
+        if( (!username.equals("") && username.length() <=12 && StringUtils.isAlphanumeric(cs)) && (!password.equals("") && password.length() <=12)&&(!firstName.equals("")) && (!lastName.equals(""))&&(gender.equals("Male") || gender.equals("Female") || gender.equals("Other"))){
+            return true;
+        }
+        else{
+            return false;
+        }
+
+
     }
 }

@@ -127,4 +127,11 @@ public class LoginActivity extends AppCompatActivity {
 
 
     }
+    boolean is_valid(String username, String password){
+        if ((username.equals("user1") && password.equals("1234")) || (username.equals("user2") && password.equals("5678"))){
+            return true;
+        }
+        return false;
+
+    }
 }
