@@ -1,18 +1,28 @@
 package com.example.reach;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import com.google.android.material.snackbar.Snackbar;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -26,25 +36,100 @@ import static com.example.reach.EventDatabaseHelper.start_date;
 
 public class MainActivity extends AppCompatActivity implements EventAdapter.onClickListener
 {
-
-
-
-
-    //Counters
-    int week_num;
-
-
-
     private androidx.recyclerview.widget.RecyclerView RecyclerView;
     private RecyclerView.Adapter Adapter;
     private RecyclerView.LayoutManager LayoutManager;
     static SQLiteDatabase database;
     static final String event_query = "";
     String userid;
-    LocalDate today, monday, sunday;
+    ArrayList<Item> exampleList;
+    ProgressBar progressBar;
+    String query;
 
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
 
+        userid = getIntent().getStringExtra("userid");
+        //Button
+        Button myEButton = findViewById(R.id.button);
+
+        //db stuff
+        EventDatabaseHelper dbHelper = new EventDatabaseHelper(this);
+        exampleList = new ArrayList<>();
+        database = dbHelper.getWritableDatabase();
+
+        //recycler view stuff
+        RecyclerView = findViewById(R.id.EventRecyclerView);
+        RecyclerView.setHasFixedSize(true);
+        LayoutManager = new LinearLayoutManager(this);
+        Adapter = new EventAdapter(exampleList, this);
+        RecyclerView.setLayoutManager(LayoutManager);
+        RecyclerView.setAdapter(Adapter);
+        progressBar  = findViewById(R.id.progressBar4);
+        progressBar.setVisibility(View.INVISIBLE);
+        query = "SELECT rowid " + event_id + "," + location +  "," + event_name +
+                " FROM " + EVENT_TABLE_NAME +";";
+
+       //populate events
+        AccessDB accessDB = new AccessDB();
+        accessDB.execute(query);
+//        queryEvents(exampleList,database,query);
+        Adapter.notifyDataSetChanged();
+
+
+        myEButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, MyEvents.class);
+                intent.putExtra("userid", userid);
+                startActivityForResult(intent,10);
+            }
+        });
+
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        Snackbar.make((View)findViewById(android.R.id.content),"Use the Help menu item to learn about this activity",Snackbar.LENGTH_LONG).setAction("Action",null).show();
+
+
+    }
+    public boolean onCreateOptionsMenu(Menu m){
+        getMenuInflater().inflate(R.menu.menu_items, m);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+        switch(id){
+            case R.id.help:
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                builder.setTitle("Help");
+                builder.setMessage("Activity Author: Jordan Harris\nActivity Version:5\n\n" +
+                        "This Activity provides you with a List of all available events, Select an event to get more details on it, if you only want to see events related to you, visit My Events");
+                builder.create().show();
+                break;
+            case R.id.create:
+                Intent intent = new Intent(MainActivity.this, CreateEvent.class);
+                intent.putExtra("userid", userid);
+                startActivity(intent);
+                break;
+            case R.id.myevents:
+                intent = new Intent(MainActivity.this, MyEvents.class);
+                intent.putExtra("userid", userid);
+                startActivity(intent);
+                break;
+            default:
+                onBackPressed();
+                break;
+        }
+
+        return true;
+    }
     public void queryEvents(ArrayList<Item> exampleList, SQLiteDatabase db, String query)
     {
         final Cursor cursor = db.rawQuery(query,null);
@@ -65,70 +150,6 @@ public class MainActivity extends AppCompatActivity implements EventAdapter.onCl
         }
         cursor.close();
     }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        userid = getIntent().getStringExtra("userid");
-        //Button
-        Button myEButton = findViewById(R.id.button);
-
-        //db stuff
-        EventDatabaseHelper dbHelper = new EventDatabaseHelper(this);
-        final ArrayList<Item> exampleList = new ArrayList<>();
-        database = dbHelper.getWritableDatabase();
-
-        //recycler view stuff
-        RecyclerView = findViewById(R.id.EventRecyclerView);
-        RecyclerView.setHasFixedSize(true);
-        LayoutManager = new LinearLayoutManager(this);
-        Adapter = new EventAdapter(exampleList, this);
-        RecyclerView.setLayoutManager(LayoutManager);
-        RecyclerView.setAdapter(Adapter);
-        //set week
-        today = LocalDate.now();
-        monday = today;
-        while (monday.getDayOfWeek() != DayOfWeek.MONDAY)
-        {
-            monday = monday.minusDays(1);
-        }
-
-        // Go forward to get Sunday
-        sunday = today;
-        while (sunday.getDayOfWeek() != DayOfWeek.SUNDAY)
-        {
-            sunday = sunday.plusDays(1);
-        }
-
-
-
-        String query = "SELECT rowid " + event_id + "," + location +  "," + event_name +
-                " FROM " + EVENT_TABLE_NAME +";";
-
-
-
-        //populate events
-        queryEvents(exampleList, database, query);
-        Adapter.notifyDataSetChanged();
-
-
-        myEButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, MyEvents.class);
-                intent.putExtra("userid", userid);
-                startActivity(intent);
-            }
-        });
-
-
-
-
-
-    }
     @Override
     public void onMyEventClick(Item item) {
         Intent intent = new Intent(MainActivity.this,ViewEvent.class);
@@ -137,4 +158,32 @@ public class MainActivity extends AppCompatActivity implements EventAdapter.onCl
         startActivity(intent);
     }
 
+    protected class AccessDB extends AsyncTask<String, Integer, String>{
+        @Override
+        protected void onProgressUpdate(Integer... values) {
+            super.onProgressUpdate(values);
+            progressBar.setVisibility(View.VISIBLE);
+            progressBar.setProgress(values[0]);
+        }
+        @Override
+        protected String doInBackground(String... strings) {
+            final String query = strings[0];
+            queryEvents(exampleList,database,query);
+            publishProgress(100);
+            return null;
+        }
+    }
+    //When back arrow is clicked
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
+
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        this.recreate();
+    }
 }

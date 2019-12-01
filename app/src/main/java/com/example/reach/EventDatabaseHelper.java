@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class EventDatabaseHelper extends SQLiteOpenHelper {
     static String DATABASE_NAME = "CP317.db";
-    static int version = 9;
+    static int version = 10;
     final static String USER_ID = "USER_ID";
     final static String USER_TABLE_NAME = "USERS";
     final static String USER_NAME = "USER_NAME";
@@ -47,15 +47,15 @@ public class EventDatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_ATTENDING_TABLE);
         ContentValues contentValues = new ContentValues();
         //Insert Users
-        contentValues.put(USER_NAME, "user1");
-        contentValues.put(PASSWORD,"1234");
+        contentValues.put(USER_NAME, "username");
+        contentValues.put(PASSWORD,"password");
         contentValues.put("FIRST_NAME","Michael");
         contentValues.put("LAST_NAME","Scott");
         contentValues.put("GENDER","Male");
 
         db.insert(USER_TABLE_NAME, "NullPlaceHolder", contentValues);
         contentValues.put(USER_NAME, "user2");
-        contentValues.put(PASSWORD, "5678");
+        contentValues.put(PASSWORD, "password2");
         contentValues.put("FIRST_NAME","Jimmy");
         contentValues.put("LAST_NAME","Halpert");
         contentValues.put("GENDER","Female");

@@ -47,4 +47,10 @@
         android:layout_height="wrap_content"
         android:text="@string/create_new_event" />
 
+    <ProgressBar
+        android:id="@+id/progressBar5"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
 </LinearLayout>

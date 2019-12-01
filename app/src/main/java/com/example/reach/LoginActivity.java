@@ -1,5 +1,7 @@
 package com.example.reach;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -8,11 +10,15 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
+
+import com.google.android.material.snackbar.Snackbar;
 
 public class LoginActivity extends AppCompatActivity {
     static SQLiteDatabase database;
@@ -50,6 +56,21 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+        Snackbar.make((View)findViewById(android.R.id.content),"Use the Help menu item to learn about this activity",Snackbar.LENGTH_LONG).setAction("Action",null).show();
+    }
+    public boolean onCreateOptionsMenu(Menu m){
+        getMenuInflater().inflate(R.menu.help, m);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
+        builder.setTitle("Help");
+        builder.setMessage("Activity Author: Ranusha De Silva\nVersion:3\n\n" +
+                "Use this Activity to log into the App, if you dont know the built in username and password check the dropbox, or Create a New account");
+        builder.create().show();
+        return true;
     }
 
     protected class Login extends AsyncTask<String, Integer, String>{
