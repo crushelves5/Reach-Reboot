@@ -21,6 +21,10 @@ import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 
+/**
+ * Presents all events affiliated with user
+ * @Author Bethel Adaghe
+ */
 public class MyEvents extends AppCompatActivity implements EventAdapter.onClickListener{
     String userid;
     String eventid;
@@ -33,6 +37,10 @@ public class MyEvents extends AppCompatActivity implements EventAdapter.onClickL
 //    String userSql = "SELECT rowid EVENT_ID, EVENT_NAME, LOCATION FROM EVENTS WHERE USER_ID = '"+ userid +"';";
     private RecyclerView.Adapter Adapter;
     private RecyclerView.LayoutManager LayoutManager;
+    /**
+     * Initialize variables and references to UI elements
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,13 +70,11 @@ public class MyEvents extends AppCompatActivity implements EventAdapter.onClickL
         Adapter = new EventAdapter(attendingList, this);
         recyclerView2.setLayoutManager(LayoutManager);
         recyclerView2.setAdapter(Adapter);
-
-
-
-
-
-
         createButton.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Starts CreateEvent Activity and passes userid
+             * @param view View Object
+             */
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MyEvents.this, CreateEvent.class);
@@ -79,11 +85,21 @@ public class MyEvents extends AppCompatActivity implements EventAdapter.onClickL
         Snackbar.make((View)findViewById(android.R.id.content),"Use the Help menu item to learn about this activity",Snackbar.LENGTH_LONG).setAction("Action",null).show();
 
     }
+
+    /**
+     * Built in function to inflate menu layout items
+     * @param m reference to Menu
+     * @return
+     */
     public boolean onCreateOptionsMenu(Menu m){
         getMenuInflater().inflate(R.menu.help, m);
         return true;
     }
-
+    /**
+     *Creates Dialog box when menu item is selected
+     * @param item the menu item selected
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
@@ -98,7 +114,10 @@ public class MyEvents extends AppCompatActivity implements EventAdapter.onClickL
         }
         return true;
     }
-
+    /**
+     * When event is selected, Starts ViewEvent Activity and passes event and user ids
+     * @param item Item selected
+     */
     @Override
     public void onMyEventClick(Item item) {
         Intent intent = new Intent(MyEvents.this,ViewEvent.class);
@@ -108,14 +127,26 @@ public class MyEvents extends AppCompatActivity implements EventAdapter.onClickL
 
 
     }
+
+    /**
+     * Async Class to read database
+     */
     protected class EventAccessDB extends AsyncTask<String, Integer, String> {
+        /**
+         * Update progress bar
+         * @param values percentage of progress
+         */
         @Override
         protected void onProgressUpdate(Integer... values) {
             super.onProgressUpdate(values);
             progressBar.setVisibility(View.VISIBLE);
             progressBar.setProgress(values[0]);
         }
-
+        /**
+         * Runs in background to query database and load event objects into 2 ArrayLists
+         * @param strings contains query strings
+         * @return
+         */
         @Override
         protected String doInBackground(String... strings) {
             String query1 = strings[0];
@@ -145,6 +176,9 @@ public class MyEvents extends AppCompatActivity implements EventAdapter.onClickL
             return null;
         }
     }
+    /**
+     * When returning to this Activity, recreate activity
+     */
     @Override
     protected void onRestart() {
         super.onRestart();

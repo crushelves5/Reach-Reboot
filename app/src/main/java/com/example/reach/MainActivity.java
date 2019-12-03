@@ -34,6 +34,10 @@ import static com.example.reach.EventDatabaseHelper.event_name;
 import static com.example.reach.EventDatabaseHelper.location;
 import static com.example.reach.EventDatabaseHelper.start_date;
 
+/**
+ * Generates a list of all available events for user to select
+ * @Author Jordan Harris
+ */
 public class MainActivity extends AppCompatActivity implements EventAdapter.onClickListener
 {
     private androidx.recyclerview.widget.RecyclerView RecyclerView;
@@ -46,7 +50,10 @@ public class MainActivity extends AppCompatActivity implements EventAdapter.onCl
     ProgressBar progressBar;
     String query;
 
-
+    /**
+     * Initialize variables and references to UI elements
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -82,6 +89,10 @@ public class MainActivity extends AppCompatActivity implements EventAdapter.onCl
 
 
         myEButton.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Starts the MyEvents Activity and passes userid
+             * @param view View object
+             */
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, MyEvents.class);
@@ -97,11 +108,21 @@ public class MainActivity extends AppCompatActivity implements EventAdapter.onCl
 
 
     }
+    /**
+     * Built in function to inflate menu layout items
+     * @param m reference to Menu
+     * @return
+     */
     public boolean onCreateOptionsMenu(Menu m){
         getMenuInflater().inflate(R.menu.menu_items, m);
         return true;
     }
 
+    /**
+     * Navigates to other activities based on menu item selection
+     * @param item Menu item
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
@@ -130,6 +151,13 @@ public class MainActivity extends AppCompatActivity implements EventAdapter.onCl
 
         return true;
     }
+
+    /**
+     * Queries the database and loads events into ArrayList
+     * @param exampleList The ArrayList to load event object into
+     * @param db Reference to database
+     * @param query Query String
+     */
     public void queryEvents(ArrayList<Item> exampleList, SQLiteDatabase db, String query)
     {
         final Cursor cursor = db.rawQuery(query,null);
@@ -150,6 +178,11 @@ public class MainActivity extends AppCompatActivity implements EventAdapter.onCl
         }
         cursor.close();
     }
+
+    /**
+     * When event is selected, Starts ViewEvent Activity and passes event and user ids
+     * @param item Item selected
+     */
     @Override
     public void onMyEventClick(Item item) {
         Intent intent = new Intent(MainActivity.this,ViewEvent.class);
@@ -158,13 +191,26 @@ public class MainActivity extends AppCompatActivity implements EventAdapter.onCl
         startActivity(intent);
     }
 
+    /**
+     * Async Class to read database
+     */
     protected class AccessDB extends AsyncTask<String, Integer, String>{
+        /**
+         * Update progress bar
+         * @param values percentage of progress
+         */
         @Override
         protected void onProgressUpdate(Integer... values) {
             super.onProgressUpdate(values);
             progressBar.setVisibility(View.VISIBLE);
             progressBar.setProgress(values[0]);
         }
+
+        /**
+         * Runs in background to query database and load event objects into ArrayList
+         * @param strings contains query string
+         * @return
+         */
         @Override
         protected String doInBackground(String... strings) {
             final String query = strings[0];
@@ -173,14 +219,11 @@ public class MainActivity extends AppCompatActivity implements EventAdapter.onCl
             return null;
         }
     }
-    //When back arrow is clicked
-    @Override
-    public boolean onSupportNavigateUp() {
-        onBackPressed();
-        return true;
-    }
 
 
+    /**
+     * When returning to this Activity, recreate activity
+     */
     @Override
     protected void onRestart() {
         super.onRestart();

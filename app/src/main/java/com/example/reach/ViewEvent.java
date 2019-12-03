@@ -31,6 +31,10 @@ import com.google.android.material.snackbar.Snackbar;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * Provides more detailed view of an event
+ * @Author Onkar Deol
+ */
 public class ViewEvent extends AppCompatActivity implements OnMapReadyCallback {
     String eventid;
     String userid;
@@ -38,6 +42,10 @@ public class ViewEvent extends AppCompatActivity implements OnMapReadyCallback {
     EventDatabaseHelper dbhelper;
     SQLiteDatabase database;
     ProgressBar progressBar;
+    /**
+     * Initialize variables and references to UI elements
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,6 +88,10 @@ public class ViewEvent extends AppCompatActivity implements OnMapReadyCallback {
         }
         cursor.close();
         attendButton.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Writes User attending status to database
+             * @param view
+             */
             @Override
             public void onClick(View view) {
                 dbhelper.insertAttending(database,eventid,userid);
@@ -87,6 +99,10 @@ public class ViewEvent extends AppCompatActivity implements OnMapReadyCallback {
             }
         });
         deleteButton.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Generates dialog box to delete event
+             * @param view
+             */
             @Override
             public void onClick(View view) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(ViewEvent.this);
@@ -116,11 +132,20 @@ public class ViewEvent extends AppCompatActivity implements OnMapReadyCallback {
         Snackbar.make((View)findViewById(android.R.id.content),"Use the Help menu item to learn about this activity",Snackbar.LENGTH_LONG).setAction("Action",null).show();
 
     }
+    /**
+     * Built in function to inflate menu layout items
+     * @param m reference to Menu
+     * @return
+     */
     public boolean onCreateOptionsMenu(Menu m){
         getMenuInflater().inflate(R.menu.help, m);
         return true;
     }
-
+    /**
+     *Creates Dialog box when menu item is selected
+     * @param item the menu item selected
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
@@ -137,6 +162,11 @@ public class ViewEvent extends AppCompatActivity implements OnMapReadyCallback {
 
         return true;
     }
+
+    /**
+     * Callback function when google maps is finished loading
+     * @param googleMap
+     */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         Geocoder geocoder = new Geocoder(this);
@@ -158,7 +188,15 @@ public class ViewEvent extends AppCompatActivity implements OnMapReadyCallback {
         mMap.addMarker(new MarkerOptions().position(event).title("Event Marker"));
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(event,16));
     }
+
+    /**
+     * Async Class to delete an event from database
+     */
     protected class AccessDB extends AsyncTask<String, Integer, String>{
+        /**
+         * Update progress bar
+         * @param values percentage of progress
+         */
         @Override
         protected void onProgressUpdate(Integer... values) {
             super.onProgressUpdate(values);
@@ -166,6 +204,11 @@ public class ViewEvent extends AppCompatActivity implements OnMapReadyCallback {
             progressBar.setProgress(values[0]);
         }
 
+        /**
+         * Deletes event from database
+         * @param strings contains eventid
+         * @return
+         */
         @Override
         protected String doInBackground(String... strings) {
             String event = strings[0];

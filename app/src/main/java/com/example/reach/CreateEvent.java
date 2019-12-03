@@ -29,11 +29,18 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-
+/**
+ * A form for the user to fill in, in order to add an event
+ * @Author Bethel Adaghe
+ */
 public class CreateEvent extends AppCompatActivity {
     String userid;
     Calendar c;
     ProgressBar progressBar;
+    /**
+     * Initialize variables and references to UI elements
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,6 +61,13 @@ public class CreateEvent extends AppCompatActivity {
                     int month = c.get(Calendar.MONTH);
                     int year = c.get(Calendar.YEAR);
                     DatePickerDialog dpd = new DatePickerDialog(CreateEvent.this, new DatePickerDialog.OnDateSetListener() {
+                        /**
+                         * Generate String result from DatePicker selection
+                         * @param datePicker DatePicker object
+                         * @param i year
+                         * @param i1 month (0-11)
+                         * @param i2 day (1-31)
+                         */
                         @Override
                         public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
                             dateText.setText(i+"-"+(i1+1)+"-"+i2);
@@ -66,6 +80,10 @@ public class CreateEvent extends AppCompatActivity {
             }
         });
         createButton.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Extracts and submits form data to AccessDB class
+             * @param view
+             */
             @Override
             public void onClick(View view) {
                 progressBar.setVisibility(View.VISIBLE);
@@ -88,11 +106,20 @@ public class CreateEvent extends AppCompatActivity {
         Snackbar.make((View)findViewById(android.R.id.content),"Use the Help menu item to learn about this activity",Snackbar.LENGTH_LONG).setAction("Action",null).show();
 
     }
+    /**
+     * Built in function to inflate menu layout items
+     * @param m reference to Menu
+     * @return
+     */
     public boolean onCreateOptionsMenu(Menu m){
         getMenuInflater().inflate(R.menu.help, m);
         return true;
     }
-
+    /**
+     *Creates Dialog box when menu item is selected
+     * @param item the menu item selected
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
@@ -110,6 +137,11 @@ public class CreateEvent extends AppCompatActivity {
         return true;
     }
 
+    /**
+     * Validates the date passed in
+     * @param date Date string
+     * @return true if valid date
+     */
     boolean dateValidator(String date){
         Date c = Calendar.getInstance().getTime();
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
@@ -134,6 +166,13 @@ public class CreateEvent extends AppCompatActivity {
         return false;
     }
 
+    /**
+     * Validate form inputs
+     * @param name name of event
+     * @param location location string of event
+     * @param date Date string of event
+     * @return true if all fields are valid
+     */
     boolean validateEvent(String name, String location, String date){
 
         if(!name.trim().equals("") && (!date.equals("") && dateValidator(date)) && !location.trim().equals("") && validate_location(location)== true ){
@@ -163,6 +202,12 @@ public class CreateEvent extends AppCompatActivity {
             return null;
         }
     }
+
+    /**
+     * Validates location string using Geocoder
+     * @param address
+     * @return
+     */
     boolean validate_location(String address){
         Geocoder geocoder = new Geocoder(CreateEvent.this);
         //If address produces an error, then reject

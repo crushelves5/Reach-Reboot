@@ -5,6 +5,10 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+/**
+ * Helper Class for Reading and writing to a database
+ * @Authors Bethel Adaghe & Jordan Harris
+ */
 public class EventDatabaseHelper extends SQLiteOpenHelper {
     static String DATABASE_NAME = "CP317.db";
     static int version = 10;
@@ -36,10 +40,19 @@ public class EventDatabaseHelper extends SQLiteOpenHelper {
                     desc + " TEXT)";
 
     static final String CREATE_ATTENDING_TABLE = "CREATE TABLE "+ATTENDING_TABLE_NAME+" (" + row +" integer primary key autoincrement, "+ event_id+" INTEGER, "+USER_ID+" INTEGER);";
+
+    /**
+     * Class constructor
+     * @param ctx Activity context
+     */
     EventDatabaseHelper(Context ctx){
         super(ctx, DATABASE_NAME,null,version);
     }
 
+    /**
+     * Creates database
+     * @param db SqliteDatabase
+     */
     @Override
     public void onCreate(SQLiteDatabase db){
         db.execSQL(CREATE_USER_TABLE);
@@ -84,6 +97,12 @@ public class EventDatabaseHelper extends SQLiteOpenHelper {
 
     }
 
+    /**
+     * Updates database if newVer > oldVer
+     * @param db SQLite Database
+     * @param oldVer int
+     * @param newVer int
+     */
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVer, int newVer){
         //Updates to database in here
@@ -95,6 +114,15 @@ public class EventDatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
+    /**
+     * Inserts a new user row into database
+     * @param db SQLiteDatabase
+     * @param username string
+     * @param password string
+     * @param firstName string
+     * @param lastName string
+     * @param gender string
+     */
     public void insertUser(SQLiteDatabase db, String username, String password, String firstName, String lastName, String gender){
         ContentValues contentValues = new ContentValues();
         contentValues.put(USER_NAME, username);
@@ -104,6 +132,13 @@ public class EventDatabaseHelper extends SQLiteOpenHelper {
         contentValues.put("GENDER",gender);
         db.insert(USER_TABLE_NAME, "NullPlaceHolder",contentValues);
     }
+
+    /**
+     * Insert a new attending row itno database
+     * @param db SQLiteDatabase
+     * @param event event id string
+     * @param user string
+     */
     public void insertAttending(SQLiteDatabase db,String event, String user){
         ContentValues contentValues = new ContentValues();
         contentValues.put(event_id,event);

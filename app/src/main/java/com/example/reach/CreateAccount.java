@@ -23,12 +23,20 @@ import com.google.android.material.snackbar.Snackbar;
 
 import org.apache.commons.lang3.StringUtils;
 
+/**
+ * A form for the user to fill in, in order to make a new account
+ * @Author Jikyung Kim
+ */
 public class CreateAccount extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
     String [] Gender = {"Male","Female","Other"};
     String selectedGender = "Male";
     ProgressBar progressBar;
 
+    /**
+     * Initialize references to UI elements
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,6 +52,10 @@ public class CreateAccount extends AppCompatActivity implements AdapterView.OnIt
         progressBar.setVisibility(View.INVISIBLE);
         Button create = findViewById(R.id.button3);
         create.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Extracts and submits form data to AccessDB
+             * @param view
+             */
             @Override
             public void onClick(View view) {
                 progressBar.setVisibility(View.VISIBLE);
@@ -69,11 +81,20 @@ public class CreateAccount extends AppCompatActivity implements AdapterView.OnIt
         });
         Snackbar.make((View)findViewById(android.R.id.content),"Use the Help menu item to learn about this activity",Snackbar.LENGTH_LONG).setAction("Action",null).show();
     }
+    /**
+     * Built in function to inflate menu layout items
+     * @param m reference to Menu
+     * @return
+     */
     public boolean onCreateOptionsMenu(Menu m){
         getMenuInflater().inflate(R.menu.help, m);
         return true;
     }
-
+    /**
+     *Creates Dialog box when menu item is selected
+     * @param item the menu item selected
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
@@ -91,6 +112,13 @@ public class CreateAccount extends AppCompatActivity implements AdapterView.OnIt
         return true;
     }
 
+    /**
+     * Called when option from spinner is selected
+     * @param parent AdapterView
+     * @param view
+     * @param pos The position of selection
+     * @param id The id of selection
+     */
     public void onItemSelected(AdapterView<?> parent, View view,
                                int pos, long id) {
         // An item was selected. You can retrieve the selected item using
@@ -98,16 +126,23 @@ public class CreateAccount extends AppCompatActivity implements AdapterView.OnIt
 
     }
 
-
+    /**
+     * Required method of AdapterView implementation. Not in use
+     * @param parent
+     */
     public void onNothingSelected(AdapterView<?> parent) {
         // Another interface callback
     }
-    //When back arrow is clicked
-    @Override
-    public boolean onSupportNavigateUp() {
-        onBackPressed();
-        return true;
-    }
+
+    /**
+     * Validates the format of user input
+     * @param username
+     * @param password
+     * @param firstName
+     * @param lastName
+     * @param gender
+     * @return boolean for all valid input
+     */
     boolean validateAccountInput(String username, String password, String firstName, String lastName, String gender){
         CharSequence cs = username;
         if( (!username.equals("") && username.length() <=12 && StringUtils.isAlphanumeric(cs)) && (!password.equals("") && password.length() <=12)&&(!firstName.equals("")) && (!lastName.equals(""))&&(gender.equals("Male") || gender.equals("Female") || gender.equals("Other"))){
@@ -119,6 +154,10 @@ public class CreateAccount extends AppCompatActivity implements AdapterView.OnIt
 
 
     }
+
+    /**
+     * Writes user profile to database
+     */
     protected class AccessDB extends AsyncTask<String, Integer, String>{
 
         @Override

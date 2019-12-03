@@ -20,6 +20,11 @@ import android.widget.Toast;
 
 import com.google.android.material.snackbar.Snackbar;
 
+/**
+ * A simple class interface for user to use to log into the application
+ * @author Ranusha De Silva
+ * @version 3
+ */
 public class LoginActivity extends AppCompatActivity {
     static SQLiteDatabase database;
     EditText username;
@@ -40,6 +45,10 @@ public class LoginActivity extends AppCompatActivity {
         progressBar.setVisibility(View.INVISIBLE);
 
         loginButton.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Called when the login button is clicked to submit input
+             * @param view view passed from the onClickListener of the button
+             */
             @Override
             public void onClick(View view) {
                 //Handover validation to AsyncTask
@@ -49,6 +58,10 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
         createButton.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Starts the CreateAccount Activity
+             * @param view view passed from the onClickListener of the button
+             */
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(LoginActivity.this,CreateAccount.class);
@@ -58,11 +71,22 @@ public class LoginActivity extends AppCompatActivity {
 
         Snackbar.make((View)findViewById(android.R.id.content),"Use the Help menu item to learn about this activity",Snackbar.LENGTH_LONG).setAction("Action",null).show();
     }
+
+    /**
+     * Built in function to inflate menu layout items
+     * @param m reference to Menu
+     * @return
+     */
     public boolean onCreateOptionsMenu(Menu m){
         getMenuInflater().inflate(R.menu.help, m);
         return true;
     }
 
+    /**
+     *Creates Dialog box when menu item is selected
+     * @param item the menu item selected
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
@@ -73,7 +97,14 @@ public class LoginActivity extends AppCompatActivity {
         return true;
     }
 
+    /**
+     *Async class to validate user with database
+     */
     protected class Login extends AsyncTask<String, Integer, String>{
+        /**
+         * Update progressbar
+         * @param values percentage of progress complete
+         */
         @Override
         protected void onProgressUpdate(Integer... values) {
             super.onProgressUpdate(values);
@@ -81,6 +112,11 @@ public class LoginActivity extends AppCompatActivity {
             progressBar.setProgress(values[0]);
         }
 
+        /**
+         * Validates user and starts MainActivity
+         * @param strings contains username and password strings
+         * @return
+         */
         @Override
         protected String doInBackground(String... strings) {
 
@@ -111,6 +147,10 @@ public class LoginActivity extends AppCompatActivity {
             return null;
         }
     }
+
+    /**
+     * Disables the login button
+     */
     void disableButton(){
         runOnUiThread(new Runnable() {
 
@@ -124,6 +164,10 @@ public class LoginActivity extends AppCompatActivity {
         });
 
     }
+
+    /**
+     * Re-enables the login button
+     */
     void enableButton(){        runOnUiThread(new Runnable() {
 
         @Override
@@ -135,6 +179,10 @@ public class LoginActivity extends AppCompatActivity {
         }
     });
     }
+
+    /**
+     * Called when credentials are deeemed invalid
+     */
     void invalidInput(){
         runOnUiThread(new Runnable() {
 
@@ -148,6 +196,13 @@ public class LoginActivity extends AppCompatActivity {
 
 
     }
+
+    /**
+     * Validates the form of the input
+     * @param username username of the user account
+     * @param password password of the user account
+     * @return
+     */
     boolean is_valid(String username, String password){
         if ((username.equals("user1") && password.equals("1234")) || (username.equals("user2") && password.equals("5678"))){
             return true;
